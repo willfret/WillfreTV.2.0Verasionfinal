@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WillfretTV</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&display=swap" rel="stylesheet">
+
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            background: #0b0b0b;
+            color: #fff;
+            font-family: 'Fredoka', Arial, sans-serif;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        *:focus {
+            outline: none;
+        }
+
+        body {
+            min-width: 960px;
+        }
+
+        #app {
+            max-width: 1280px;
+            margin: auto;
+            padding: 16px 20px 24px;
+        }
+
+        /* ===== BANNER ===== */
+
+        #banner {
+            position: relative;
+            width: 100%;
+            height: 210px;
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 22px;
+            background: url("imagenes/banner.jpg") center center / cover no-repeat;
+            background-color: #000;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+        }
+
+        #banner::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.42);
+        }
+
+        /* ===== LOGO GRANDE IZQUIERDA ===== */
+
+        #logoBanner {
+            position: absolute;
+            left: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 2;
+            width: 290px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            pointer-events: none;
+        }
+
+        #logoBanner img {
+            max-width: 100%;
+            max-height: 195px;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            display: block;
+        }
+
+        /* ===== TEXTO CENTRADO ===== */
+
+        #textoBanner {
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            pointer-events: none;
+            padding: 0 20px;
+        }
+
+        #actual {
+            font-size: 36px;
+            font-weight: 700;
+            color: #fff;
+            background: rgba(0,0,0,0.62);
+            padding: 10px 22px;
+            border-radius: 14px;
+            text-shadow:
+                0 0 8px rgba(0,0,0,0.9),
+                0 2px 6px rgba(0,0,0,0.85);
+            max-width: 80%;
+            line-height: 1.15;
+            word-break: break-word;
+        }
+
+        #subcanal {
+            margin-top: 10px;
+            font-size: 17px;
+            font-weight: 600;
+            color: #60a5fa;
+            background: rgba(0,0,0,0.62);
+            border-radius: 12px;
+            padding: 6px 14px;
+            box-shadow: 0 0 10px rgba(96,165,250,0.18);
+        }
+
+        /* ===== GRID ===== */
+
+        #canalesGrid {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .canal {
+            background: linear-gradient(180deg, #1a1a1a 0%, #131313 100%);
+            border-radius: 16px;
+            padding: 10px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+            min-height: 168px;
+            overflow: hidden;
+        }
+
+        .canal:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 14px rgba(96, 165, 250, 0.22);
+        }
+
+        .canal.activo {
+            border-color: #60a5fa;
+            box-shadow: 0 0 16px rgba(96, 165, 250, 0.38);
+            transform: scale(1.02);
+        }
+
+        .canal-imagen {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            border-radius: 10px;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-color: #0f0f0f;
+            margin-bottom: 8px;
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .canal-nombre {
+            text-align: center;
+            font-size: 14px;
+            line-height: 1.2;
+            min-height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 4px;
+            color: #f3f4f6;
+        }
+
+        #footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 14px;
+            font-size: 13px;
+            color: #94a3b8;
+        }
+
+        #footer a {
+            color: #60a5fa;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        #footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+<div id="app">
+
+    <div id="banner">
+        <div id="logoBanner">
+            <img src="imagenes/logo.png" alt="WillfretTV">
+        </div>
+
+        <div id="textoBanner">
+            <div id="actual"></div>
+            <div id="subcanal">Canales 24/7</div>
+        </div>
+    </div>
+
+    <div id="canalesGrid"></div>
+
+    <div id="footer">
+        Creado por
+        <a href="https://www.instagram.com/diegovera_s/?hl=es" target="_blank">
+            @diegovera_s
+        </a>
+        • Síguenos en Instagram
+    </div>
+
+</div>
+
+<script>
+    const canales = [
+        { nombre: "Cartoon Network", url: "https://ok.ru/videoembed/8896438738686?autoplay=1", img: "imagenes/cartoon.jpg" },
+        { nombre: "Cartoon Cartoon", url: "https://ok.ru/videoembed/10378284506878?autoplay=1", img: "imagenes/cartooncartoon.jpg" },
+        { nombre: "Fox Kids", url: "https://ok.ru/videoembed/8967999463166?autoplay=1", img: "imagenes/foxkids.jpg" },
+        { nombre: "Animax", url: "https://ok.ru/videoembed/9586717892350?autoplay=1", img: "imagenes/animax.jpg" },
+        { nombre: "Bob Esponja", url: "https://jmp2.uk/plu-6254598f5083f800076d8563.m3u8", img: "imagenes/bobesponja.jpg" },
+        { nombre: "South Park", url: "https://jmp2.uk/plu-65df731cec9fda0008b7aa8d.m3u8", img: "imagenes/southpark.jpg" },
+        { nombre: "Naruto", url: "https://jmp2.uk/plu-5ee92e72fb286e0007285fec.m3u8", img: "imagenes/naruto.jpg" },
+        { nombre: "Pokemon", url: "https://jmp2.uk/plu-6870072ca9d5c45c3e9466f1.m3u8", img: "imagenes/pokemon.jpg" },
+        { nombre: "Toonami", url: "https://ss2.tvrdomi.com:1936/tigueritostv/tigueritostv/playlist.m3u8", img: "imagenes/Toonami.jpg" },
+        { nombre: "Nickelodeon Clásicos", url: "https://jmp2.uk/plu-6824cda00101510f9eeaa011.m3u8", img: "imagenes/nick_clasicos.jpg" },
+        { nombre: "Nickelodeon Retro", url: "https://jmp2.uk/plu-5d8d08395f39465da6fb3ec4.m3u8", img: "imagenes/nick_retro.jpg" },
+        { nombre: "Cazador X", url: "https://jmp2.uk/plu-65d916a2f7f0af0008b6540d.m3u8", img: "imagenes/cazadorx.jpg" },
+        { nombre: "Inuyasha", url: "https://jmp2.uk/plu-66b26665d512590008c507b7.m3u8", img: "imagenes/inuyasha.jpg" },
+        { nombre: "Death Note", url: "https://jmp2.uk/plu-626c2ed933a2890007e91422.m3u8", img: "imagenes/deathnote.jpg" }
+    ];
+
+    let actual = 0;
+    const columnas = 5;
+
+    const actualTxt = document.getElementById("actual");
+    const grid = document.getElementById("canalesGrid");
+
+    function abrirCanal() {
+        const url = canales[actual].url;
+
+        try {
+            window.location.href = url;
+        } catch (error) {
+            location.assign(url);
+        }
+    }
+
+    function ajustarScroll() {
+        const canalActivo = document.querySelectorAll(".canal")[actual];
+
+        if (canalActivo) {
+            canalActivo.scrollIntoView({
+                behavior: "smooth",
+                block: "center",
+                inline: "nearest"
+            });
+        }
+    }
+
+    function moverSeleccion(dir) {
+        const total = canales.length;
+
+        if (dir === "derecha") actual = (actual + 1) % total;
+        if (dir === "izquierda") actual = (actual - 1 + total) % total;
+
+        if (dir === "abajo") {
+            const nuevo = actual + columnas;
+            if (nuevo < total) actual = nuevo;
+        }
+
+        if (dir === "arriba") {
+            const nuevo = actual - columnas;
+            if (nuevo >= 0) actual = nuevo;
+        }
+
+        render();
+        setTimeout(ajustarScroll, 50);
+    }
+
+    function render() {
+        actualTxt.textContent = canales[actual].nombre;
+        grid.innerHTML = "";
+
+        canales.forEach((c, i) => {
+            const div = document.createElement("div");
+            div.className = "canal" + (i === actual ? " activo" : "");
+
+            div.innerHTML = `
+                <div class="canal-imagen"></div>
+                <div class="canal-nombre">${c.nombre}</div>
+            `;
+
+            const imgBox = div.querySelector(".canal-imagen");
+            imgBox.style.backgroundImage = `url('${c.img}')`;
+
+            div.onclick = () => {
+                actual = i;
+                render();
+                setTimeout(ajustarScroll, 50);
+            };
+
+            div.ondblclick = () => {
+                actual = i;
+                render();
+                abrirCanal();
+            };
+
+            grid.appendChild(div);
+        });
+    }
+
+    document.addEventListener("keydown", (e) => {
+        if (["ArrowRight", "ArrowLeft", "ArrowDown", "ArrowUp", "Enter", "NumpadEnter"].includes(e.key)) {
+            e.preventDefault();
+        }
+
+        if (e.key === "ArrowRight") moverSeleccion("derecha");
+        if (e.key === "ArrowLeft") moverSeleccion("izquierda");
+        if (e.key === "ArrowDown") moverSeleccion("abajo");
+        if (e.key === "ArrowUp") moverSeleccion("arriba");
+
+        if (e.key === "Enter" || e.key === "NumpadEnter") {
+            abrirCanal();
+        }
+    });
+
+    render();
+</script>
+
+</body>
+</html>
